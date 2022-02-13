@@ -1,0 +1,194 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "accounting/v1/accounting.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Accounting"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/balances": {
+      "get": {
+        "operationId": "Accounting_ListBalances",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListBalancesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Accounting"
+        ]
+      },
+      "post": {
+        "operationId": "Accounting_CreateBalance",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateBalanceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateBalanceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Accounting"
+        ]
+      }
+    },
+    "/v1/balances/{balanceId}": {
+      "get": {
+        "operationId": "Accounting_GetBalance",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetBalanceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "balanceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Accounting"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1Balance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "dataBase64": {
+          "type": "string",
+          "title": "string encoding = 4;"
+        },
+        "kind": {
+          "type": "string",
+          "title": "string data_bytes = 6;"
+        },
+        "currency": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateBalanceRequest": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "$ref": "#/definitions/v1Balance"
+        }
+      }
+    },
+    "v1CreateBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "$ref": "#/definitions/v1Balance"
+        }
+      }
+    },
+    "v1GetBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "$ref": "#/definitions/v1Balance"
+        }
+      }
+    },
+    "v1ListBalancesResponse": {
+      "type": "object",
+      "properties": {
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Balance"
+          }
+        }
+      }
+    }
+  }
+}

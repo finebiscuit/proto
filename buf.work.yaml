@@ -1,0 +1,5 @@
+version: v1
+directories:
+  - biscuit
+  - biscuitdata
+  - third_party

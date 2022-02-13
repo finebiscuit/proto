@@ -1,0 +1,23 @@
+syntax = "proto3";
+package biscuit.forex.v1;
+
+option go_package = "github.com/finebiscuit/proto/biscuit/forex/v1";
+
+import "google/api/annotations.proto";
+
+service Forex {
+  rpc GetRate(GetRateRequest) returns (GetRateResponse) {
+    option (google.api.http) = {
+      get: "/v1/forex-rates/{from}/{to}"
+    };
+  }
+}
+
+message GetRateRequest {
+  string from = 1;
+  string to = 2;
+}
+
+message GetRateResponse {
+  string value = 1;
+}

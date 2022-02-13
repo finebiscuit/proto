@@ -1,0 +1,40 @@
+syntax = "proto3";
+package biscuit.auth.v1;
+
+option go_package = "github.com/finebiscuit/proto/biscuit/auth/v1";
+
+import "google/api/annotations.proto";
+
+service Auth {
+  rpc Register(RegisterRequest) returns (AccessTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/register"
+    };
+  }
+
+  rpc Login(LoginRequest) returns (AccessTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/login"
+    };
+  }
+}
+
+message RegisterRequest {
+  string email = 1;
+  // string username = 2;
+  string password = 3;
+}
+
+message LoginRequest {
+  string email = 1;
+  // string username = 2;
+  string password = 3;
+}
+
+message AccessTokenResponse {
+  string token_type = 1;
+  string access_token = 2;
+  uint32 expires_in = 3;
+  string refresh_token = 4;
+  string scope = 5;
+}
