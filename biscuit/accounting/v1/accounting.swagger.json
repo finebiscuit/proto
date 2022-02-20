@@ -136,22 +136,20 @@
         "id": {
           "type": "string"
         },
-        "version": {
+        "encData": {
+          "$ref": "#/definitions/v1EncryptedData"
+        },
+        "ownerId": {
           "type": "string"
         },
-        "keyId": {
+        "typeId": {
           "type": "string"
         },
-        "dataBase64": {
-          "type": "string",
-          "title": "string encoding = 4;"
-        },
-        "kind": {
-          "type": "string",
-          "title": "string data_bytes = 6;"
-        },
-        "currency": {
+        "currencyId": {
           "type": "string"
+        },
+        "currentEntry": {
+          "$ref": "#/definitions/v1Entry"
         }
       }
     },
@@ -168,6 +166,38 @@
       "properties": {
         "balance": {
           "$ref": "#/definitions/v1Balance"
+        }
+      }
+    },
+    "v1EncryptedData": {
+      "type": "object",
+      "properties": {
+        "versionHash": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "algo": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "base64Value": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Entry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "encData": {
+          "$ref": "#/definitions/v1EncryptedData"
+        },
+        "balanceId": {
+          "type": "string"
         }
       }
     },

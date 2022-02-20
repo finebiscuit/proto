@@ -38,26 +38,26 @@ export namespace BalanceData {
     }
 }
 
-export class BalanceEntryData extends jspb.Message { 
+export class EntryData extends jspb.Message { 
     getCreatedAt(): number;
-    setCreatedAt(value: number): BalanceEntryData;
+    setCreatedAt(value: number): EntryData;
     getUpdatedAt(): number;
-    setUpdatedAt(value: number): BalanceEntryData;
+    setUpdatedAt(value: number): EntryData;
 
     getValuesMap(): jspb.Map<string, string>;
     clearValuesMap(): void;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): BalanceEntryData.AsObject;
-    static toObject(includeInstance: boolean, msg: BalanceEntryData): BalanceEntryData.AsObject;
+    toObject(includeInstance?: boolean): EntryData.AsObject;
+    static toObject(includeInstance: boolean, msg: EntryData): EntryData.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: BalanceEntryData, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): BalanceEntryData;
-    static deserializeBinaryFromReader(message: BalanceEntryData, reader: jspb.BinaryReader): BalanceEntryData;
+    static serializeBinaryToWriter(message: EntryData, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): EntryData;
+    static deserializeBinaryFromReader(message: EntryData, reader: jspb.BinaryReader): EntryData;
 }
 
-export namespace BalanceEntryData {
+export namespace EntryData {
     export type AsObject = {
         createdAt: number,
         updatedAt: number,

@@ -5,13 +5,26 @@
 */
 
 import * as fm from "../../fetch.pb"
+export type EncryptedData = {
+  versionHash?: string
+  keyId?: string
+  algo?: number
+  base64Value?: string
+}
+
 export type Balance = {
   id?: string
-  version?: string
-  keyId?: string
-  dataBase64?: string
-  kind?: string
-  currency?: string
+  encData?: EncryptedData
+  ownerId?: string
+  typeId?: string
+  currencyId?: string
+  currentEntry?: Entry
+}
+
+export type Entry = {
+  id?: string
+  encData?: EncryptedData
+  balanceId?: string
 }
 
 export type ListBalancesRequest = {

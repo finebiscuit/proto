@@ -26,15 +26,26 @@ service Accounting {
   }
 }
 
+message EncryptedData {
+  string version_hash = 1;
+  string key_id = 2;
+  uint32 algo = 3;
+  string base64_value = 4;
+}
+
 message Balance {
   string id = 1;
-  string version = 2;
-  string key_id = 3;
-  // string encoding = 4;
-  string data_base64 = 5;
-  // string data_bytes = 6;
-  string kind = 7;
-  string currency = 8;
+  EncryptedData enc_data = 2;
+  string owner_id = 3;
+  string type_id = 4;
+  string currency_id = 5;
+  Entry current_entry = 6;
+}
+
+message Entry {
+  string id = 1;
+  EncryptedData enc_data = 2;
+  string balance_id = 3;
 }
 
 message ListBalancesRequest {}
