@@ -1,7 +1,7 @@
 syntax = "proto3";
 package biscuit.forex.v1;
 
-option go_package = "github.com/finebiscuit/proto/biscuit/forex/v1";
+option go_package = "github.com/finebiscuit/proto/biscuit/forex/v1;forexv1";
 
 import "google/api/annotations.proto";
 

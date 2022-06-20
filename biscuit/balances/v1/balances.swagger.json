@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "accounting/v1/accounting.proto",
+    "title": "balances/v1/balances.proto",
     "version": "version not set"
   },
   "tags": [
     {
-      "name": "Accounting"
+      "name": "Balances"
     }
   ],
   "consumes": [
@@ -18,12 +18,12 @@
   "paths": {
     "/v1/balances": {
       "get": {
-        "operationId": "Accounting_ListBalances",
+        "operationId": "Balances_List",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListBalancesResponse"
+              "$ref": "#/definitions/v1ListResponse"
             }
           },
           "default": {
@@ -34,16 +34,16 @@
           }
         },
         "tags": [
-          "Accounting"
+          "Balances"
         ]
       },
       "post": {
-        "operationId": "Accounting_CreateBalance",
+        "operationId": "Balances_Create",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateBalanceResponse"
+              "$ref": "#/definitions/v1CreateResponse"
             }
           },
           "default": {
@@ -59,23 +59,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateBalanceRequest"
+              "$ref": "#/definitions/v1CreateRequest"
             }
           }
         ],
         "tags": [
-          "Accounting"
+          "Balances"
         ]
       }
     },
     "/v1/balances/{balanceId}": {
       "get": {
-        "operationId": "Accounting_GetBalance",
+        "operationId": "Balances_Get",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetBalanceResponse"
+              "$ref": "#/definitions/v1GetResponse"
             }
           },
           "default": {
@@ -94,7 +94,59 @@
           }
         ],
         "tags": [
-          "Accounting"
+          "Balances"
+        ]
+      }
+    },
+    "/v1/balances/{balanceId}/entries/{entryYmd}": {
+      "put": {
+        "operationId": "Balances_UpsertEntry",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpsertEntryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "balanceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "entryYmd",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "entryPayload": {
+                  "$ref": "#/definitions/v1Payload"
+                },
+                "versionMatch": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Balances"
         ]
       }
     }
@@ -103,14 +155,11 @@
     "protobufAny": {
       "type": "object",
       "properties": {
-        "typeUrl": {
+        "@type": {
           "type": "string"
-        },
-        "value": {
-          "type": "string",
-          "format": "byte"
         }
-      }
+      },
+      "additionalProperties": {}
     },
     "rpcStatus": {
       "type": "object",
@@ -136,11 +185,8 @@
         "id": {
           "type": "string"
         },
-        "encData": {
-          "$ref": "#/definitions/v1EncryptedData"
-        },
-        "ownerId": {
-          "type": "string"
+        "payload": {
+          "$ref": "#/definitions/v1Payload"
         },
         "typeId": {
           "type": "string"
@@ -153,7 +199,27 @@
         }
       }
     },
-    "v1CreateBalanceRequest": {
+    "v1CreateRequest": {
+      "type": "object",
+      "properties": {
+        "typeId": {
+          "type": "string"
+        },
+        "currencyId": {
+          "type": "string"
+        },
+        "balancePayload": {
+          "$ref": "#/definitions/v1Payload"
+        },
+        "entryYmd": {
+          "type": "string"
+        },
+        "entryPayload": {
+          "$ref": "#/definitions/v1Payload"
+        }
+      }
+    },
+    "v1CreateResponse": {
       "type": "object",
       "properties": {
         "balance": {
@@ -161,7 +227,18 @@
         }
       }
     },
-    "v1CreateBalanceResponse": {
+    "v1Entry": {
+      "type": "object",
+      "properties": {
+        "ymd": {
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/definitions/v1Payload"
+        }
+      }
+    },
+    "v1GetResponse": {
       "type": "object",
       "properties": {
         "balance": {
@@ -169,16 +246,27 @@
         }
       }
     },
-    "v1EncryptedData": {
+    "v1ListResponse": {
       "type": "object",
       "properties": {
-        "versionHash": {
+        "balances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Balance"
+          }
+        }
+      }
+    },
+    "v1Payload": {
+      "type": "object",
+      "properties": {
+        "version": {
           "type": "string"
         },
         "keyId": {
           "type": "string"
         },
-        "algo": {
+        "scheme": {
           "type": "integer",
           "format": "int64"
         },
@@ -187,36 +275,11 @@
         }
       }
     },
-    "v1Entry": {
+    "v1UpsertEntryResponse": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "encData": {
-          "$ref": "#/definitions/v1EncryptedData"
-        },
-        "balanceId": {
-          "type": "string"
-        }
-      }
-    },
-    "v1GetBalanceResponse": {
-      "type": "object",
-      "properties": {
-        "balance": {
-          "$ref": "#/definitions/v1Balance"
-        }
-      }
-    },
-    "v1ListBalancesResponse": {
-      "type": "object",
-      "properties": {
-        "balances": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Balance"
-          }
+        "entry": {
+          "$ref": "#/definitions/v1Entry"
         }
       }
     }

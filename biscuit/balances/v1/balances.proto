@@ -1,0 +1,87 @@
+syntax = "proto3";
+package biscuit.balances.v1;
+
+option go_package = "github.com/finebiscuit/proto/biscuit/balances/v1;balancesv1";
+
+import "google/api/annotations.proto";
+
+service Balances {
+  rpc List(ListRequest) returns (ListResponse) {
+    option (google.api.http) = {
+      get: "/v1/balances"
+    };
+  }
+
+  rpc Get(GetRequest) returns (GetResponse) {
+    option (google.api.http) = {
+      get: "/v1/balances/{balance_id}"
+    };
+  }
+
+  rpc Create(CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/v1/balances"
+      body: "*"
+    };
+  }
+
+  rpc UpsertEntry(UpsertEntryRequest) returns (UpsertEntryResponse) {
+    option (google.api.http) = {
+      put: "/v1/balances/{balance_id}/entries/{entry_ymd}"
+      body: "*"
+    };
+  }
+}
+
+message Payload {
+  string version = 1;
+  string key_id = 2;
+  uint32 scheme = 3;
+  string base64_value = 4;
+}
+
+message Balance {
+  string id = 1;
+  Payload payload = 2;
+  string type_id = 3;
+  string currency_id = 4;
+  Entry current_entry = 5;
+}
+
+message Entry {
+  string ymd = 1;
+  Payload payload = 2;
+}
+
+message ListRequest {}
+message ListResponse {
+  repeated Balance balances = 1;
+}
+
+message GetRequest {
+  string balance_id = 1;
+}
+message GetResponse {
+  Balance balance = 1;
+}
+
+message CreateRequest {
+  string type_id = 1;
+  string currency_id = 2;
+  Payload balance_payload = 3;
+  string entry_ymd = 4;
+  Payload entry_payload = 5;
+}
+message CreateResponse {
+  Balance balance = 1;
+}
+
+message UpsertEntryRequest {
+  string balance_id = 1;
+  string entry_ymd = 2;
+  Payload entry_payload = 3;
+  string version_match = 4;
+}
+message UpsertEntryResponse {
+  Entry entry = 1;
+}
