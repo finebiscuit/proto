@@ -3,10 +3,11 @@ module github.com/finebiscuit/proto
 go 1.17
 
 require (
+	github.com/bufbuild/connect-go v0.1.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.3
 	google.golang.org/genproto v0.0.0-20220211171837-173942840c17
 	google.golang.org/grpc v1.44.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
