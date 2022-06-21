@@ -33,7 +33,7 @@ type BalancesClient interface {
 	UpdateBalance(context.Context, *connect_go.Request[v1.UpdateBalanceRequest]) (*connect_go.Response[v1.UpdateBalanceResponse], error)
 	ListEntries(context.Context, *connect_go.Request[v1.ListEntriesRequest]) (*connect_go.Response[v1.ListEntriesResponse], error)
 	GetEntry(context.Context, *connect_go.Request[v1.GetEntryRequest]) (*connect_go.Response[v1.GetEntryResponse], error)
-	CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error)
+	CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryResponse], error)
 	UpdateEntry(context.Context, *connect_go.Request[v1.UpdateEntryRequest]) (*connect_go.Response[v1.UpdateEntryResponse], error)
 }
 
@@ -77,7 +77,7 @@ func NewBalancesClient(httpClient connect_go.HTTPClient, baseURL string, opts ..
 			baseURL+"/biscuit.balances.v1.Balances/GetEntry",
 			opts...,
 		),
-		createEntry: connect_go.NewClient[v1.CreateEntryRequest, v1.CreateEntryRequest](
+		createEntry: connect_go.NewClient[v1.CreateEntryRequest, v1.CreateEntryResponse](
 			httpClient,
 			baseURL+"/biscuit.balances.v1.Balances/CreateEntry",
 			opts...,
@@ -98,7 +98,7 @@ type balancesClient struct {
 	updateBalance *connect_go.Client[v1.UpdateBalanceRequest, v1.UpdateBalanceResponse]
 	listEntries   *connect_go.Client[v1.ListEntriesRequest, v1.ListEntriesResponse]
 	getEntry      *connect_go.Client[v1.GetEntryRequest, v1.GetEntryResponse]
-	createEntry   *connect_go.Client[v1.CreateEntryRequest, v1.CreateEntryRequest]
+	createEntry   *connect_go.Client[v1.CreateEntryRequest, v1.CreateEntryResponse]
 	updateEntry   *connect_go.Client[v1.UpdateEntryRequest, v1.UpdateEntryResponse]
 }
 
@@ -133,7 +133,7 @@ func (c *balancesClient) GetEntry(ctx context.Context, req *connect_go.Request[v
 }
 
 // CreateEntry calls biscuit.balances.v1.Balances.CreateEntry.
-func (c *balancesClient) CreateEntry(ctx context.Context, req *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error) {
+func (c *balancesClient) CreateEntry(ctx context.Context, req *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryResponse], error) {
 	return c.createEntry.CallUnary(ctx, req)
 }
 
@@ -150,7 +150,7 @@ type BalancesHandler interface {
 	UpdateBalance(context.Context, *connect_go.Request[v1.UpdateBalanceRequest]) (*connect_go.Response[v1.UpdateBalanceResponse], error)
 	ListEntries(context.Context, *connect_go.Request[v1.ListEntriesRequest]) (*connect_go.Response[v1.ListEntriesResponse], error)
 	GetEntry(context.Context, *connect_go.Request[v1.GetEntryRequest]) (*connect_go.Response[v1.GetEntryResponse], error)
-	CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error)
+	CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryResponse], error)
 	UpdateEntry(context.Context, *connect_go.Request[v1.UpdateEntryRequest]) (*connect_go.Response[v1.UpdateEntryResponse], error)
 }
 
@@ -231,7 +231,7 @@ func (UnimplementedBalancesHandler) GetEntry(context.Context, *connect_go.Reques
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.GetEntry is not implemented"))
 }
 
-func (UnimplementedBalancesHandler) CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error) {
+func (UnimplementedBalancesHandler) CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.CreateEntry is not implemented"))
 }
 

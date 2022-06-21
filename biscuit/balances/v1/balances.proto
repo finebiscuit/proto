@@ -11,7 +11,7 @@ service Balances {
 
   rpc ListEntries(ListEntriesRequest) returns (ListEntriesResponse) {}
   rpc GetEntry(GetEntryRequest) returns (GetEntryResponse) {}
-  rpc CreateEntry(CreateEntryRequest) returns (CreateEntryRequest) {}
+  rpc CreateEntry(CreateEntryRequest) returns (CreateEntryResponse) {}
   rpc UpdateEntry(UpdateEntryRequest) returns (UpdateEntryResponse) {}
 }
 

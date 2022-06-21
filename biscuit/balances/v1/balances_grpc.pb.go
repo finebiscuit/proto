@@ -28,7 +28,7 @@ type BalancesClient interface {
 	UpdateBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error)
 	ListEntries(ctx context.Context, in *ListEntriesRequest, opts ...grpc.CallOption) (*ListEntriesResponse, error)
 	GetEntry(ctx context.Context, in *GetEntryRequest, opts ...grpc.CallOption) (*GetEntryResponse, error)
-	CreateEntry(ctx context.Context, in *CreateEntryRequest, opts ...grpc.CallOption) (*CreateEntryRequest, error)
+	CreateEntry(ctx context.Context, in *CreateEntryRequest, opts ...grpc.CallOption) (*CreateEntryResponse, error)
 	UpdateEntry(ctx context.Context, in *UpdateEntryRequest, opts ...grpc.CallOption) (*UpdateEntryResponse, error)
 }
 
@@ -94,8 +94,8 @@ func (c *balancesClient) GetEntry(ctx context.Context, in *GetEntryRequest, opts
 	return out, nil
 }
 
-func (c *balancesClient) CreateEntry(ctx context.Context, in *CreateEntryRequest, opts ...grpc.CallOption) (*CreateEntryRequest, error) {
-	out := new(CreateEntryRequest)
+func (c *balancesClient) CreateEntry(ctx context.Context, in *CreateEntryRequest, opts ...grpc.CallOption) (*CreateEntryResponse, error) {
+	out := new(CreateEntryResponse)
 	err := c.cc.Invoke(ctx, "/biscuit.balances.v1.Balances/CreateEntry", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -122,7 +122,7 @@ type BalancesServer interface {
 	UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error)
 	ListEntries(context.Context, *ListEntriesRequest) (*ListEntriesResponse, error)
 	GetEntry(context.Context, *GetEntryRequest) (*GetEntryResponse, error)
-	CreateEntry(context.Context, *CreateEntryRequest) (*CreateEntryRequest, error)
+	CreateEntry(context.Context, *CreateEntryRequest) (*CreateEntryResponse, error)
 	UpdateEntry(context.Context, *UpdateEntryRequest) (*UpdateEntryResponse, error)
 	mustEmbedUnimplementedBalancesServer()
 }
@@ -149,7 +149,7 @@ func (UnimplementedBalancesServer) ListEntries(context.Context, *ListEntriesRequ
 func (UnimplementedBalancesServer) GetEntry(context.Context, *GetEntryRequest) (*GetEntryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEntry not implemented")
 }
-func (UnimplementedBalancesServer) CreateEntry(context.Context, *CreateEntryRequest) (*CreateEntryRequest, error) {
+func (UnimplementedBalancesServer) CreateEntry(context.Context, *CreateEntryRequest) (*CreateEntryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateEntry not implemented")
 }
 func (UnimplementedBalancesServer) UpdateEntry(context.Context, *UpdateEntryRequest) (*UpdateEntryResponse, error) {
