@@ -25,7 +25,7 @@ type BalancesClient interface {
 	ListBalances(ctx context.Context, in *ListBalancesRequest, opts ...grpc.CallOption) (*ListBalancesResponse, error)
 	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...grpc.CallOption) (*GetBalanceResponse, error)
 	CreateBalance(ctx context.Context, in *CreateBalanceRequest, opts ...grpc.CallOption) (*CreateBalanceResponse, error)
-	UpdateBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceRequest, error)
+	UpdateBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error)
 	ListEntries(ctx context.Context, in *ListEntriesRequest, opts ...grpc.CallOption) (*ListEntriesResponse, error)
 	GetEntry(ctx context.Context, in *GetEntryRequest, opts ...grpc.CallOption) (*GetEntryResponse, error)
 	CreateEntry(ctx context.Context, in *CreateEntryRequest, opts ...grpc.CallOption) (*CreateEntryRequest, error)
@@ -67,8 +67,8 @@ func (c *balancesClient) CreateBalance(ctx context.Context, in *CreateBalanceReq
 	return out, nil
 }
 
-func (c *balancesClient) UpdateBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceRequest, error) {
-	out := new(UpdateBalanceRequest)
+func (c *balancesClient) UpdateBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error) {
+	out := new(UpdateBalanceResponse)
 	err := c.cc.Invoke(ctx, "/biscuit.balances.v1.Balances/UpdateBalance", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -119,7 +119,7 @@ type BalancesServer interface {
 	ListBalances(context.Context, *ListBalancesRequest) (*ListBalancesResponse, error)
 	GetBalance(context.Context, *GetBalanceRequest) (*GetBalanceResponse, error)
 	CreateBalance(context.Context, *CreateBalanceRequest) (*CreateBalanceResponse, error)
-	UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceRequest, error)
+	UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error)
 	ListEntries(context.Context, *ListEntriesRequest) (*ListEntriesResponse, error)
 	GetEntry(context.Context, *GetEntryRequest) (*GetEntryResponse, error)
 	CreateEntry(context.Context, *CreateEntryRequest) (*CreateEntryRequest, error)
@@ -140,7 +140,7 @@ func (UnimplementedBalancesServer) GetBalance(context.Context, *GetBalanceReques
 func (UnimplementedBalancesServer) CreateBalance(context.Context, *CreateBalanceRequest) (*CreateBalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBalance not implemented")
 }
-func (UnimplementedBalancesServer) UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceRequest, error) {
+func (UnimplementedBalancesServer) UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBalance not implemented")
 }
 func (UnimplementedBalancesServer) ListEntries(context.Context, *ListEntriesRequest) (*ListEntriesResponse, error) {

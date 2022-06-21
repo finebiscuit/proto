@@ -7,7 +7,7 @@ service Balances {
   rpc ListBalances(ListBalancesRequest) returns (ListBalancesResponse) {}
   rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse) {}
   rpc CreateBalance(CreateBalanceRequest) returns (CreateBalanceResponse) {}
-  rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceRequest) {}
+  rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceResponse) {}
 
   rpc ListEntries(ListEntriesRequest) returns (ListEntriesResponse) {}
   rpc GetEntry(GetEntryRequest) returns (GetEntryResponse) {}
@@ -64,6 +64,9 @@ message UpdateBalanceRequest {
   string currency_id = 3;
   Payload balance_payload = 4;
   string version_match = 5;
+}
+message UpdateBalanceResponse {
+  Balance balance = 1;
 }
 
 message ListEntriesRequest {
