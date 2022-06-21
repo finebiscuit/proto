@@ -3,34 +3,16 @@ package biscuit.balances.v1;
 
 option go_package = "github.com/finebiscuit/proto/biscuit/balances/v1;balancesv1";
 
-import "google/api/annotations.proto";
-
 service Balances {
-  rpc List(ListRequest) returns (ListResponse) {
-    option (google.api.http) = {
-      get: "/v1/balances"
-    };
-  }
+  rpc ListBalances(ListBalancesRequest) returns (ListBalancesResponse) {}
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse) {}
+  rpc CreateBalance(CreateBalanceRequest) returns (CreateBalanceResponse) {}
+  rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceRequest) {}
 
-  rpc Get(GetRequest) returns (GetResponse) {
-    option (google.api.http) = {
-      get: "/v1/balances/{balance_id}"
-    };
-  }
-
-  rpc Create(CreateRequest) returns (CreateResponse) {
-    option (google.api.http) = {
-      post: "/v1/balances"
-      body: "*"
-    };
-  }
-
-  rpc UpsertEntry(UpsertEntryRequest) returns (UpsertEntryResponse) {
-    option (google.api.http) = {
-      put: "/v1/balances/{balance_id}/entries/{entry_ymd}"
-      body: "*"
-    };
-  }
+  rpc ListEntries(ListEntriesRequest) returns (ListEntriesResponse) {}
+  rpc GetEntry(GetEntryRequest) returns (GetEntryResponse) {}
+  rpc CreateEntry(CreateEntryRequest) returns (CreateEntryRequest) {}
+  rpc UpdateEntry(UpdateEntryRequest) returns (UpdateEntryResponse) {}
 }
 
 message Payload {
@@ -53,35 +35,67 @@ message Entry {
   Payload payload = 2;
 }
 
-message ListRequest {}
-message ListResponse {
+message ListBalancesRequest {}
+message ListBalancesResponse {
   repeated Balance balances = 1;
 }
 
-message GetRequest {
+message GetBalanceRequest {
   string balance_id = 1;
 }
-message GetResponse {
+message GetBalanceResponse {
   Balance balance = 1;
 }
 
-message CreateRequest {
+message CreateBalanceRequest {
   string type_id = 1;
   string currency_id = 2;
   Payload balance_payload = 3;
   string entry_ymd = 4;
   Payload entry_payload = 5;
 }
-message CreateResponse {
+message CreateBalanceResponse {
   Balance balance = 1;
 }
 
-message UpsertEntryRequest {
+message UpdateBalanceRequest {
+  string balance_id = 1;
+  string type_id = 2;
+  string currency_id = 3;
+  Payload balance_payload = 4;
+  string version_match = 5;
+}
+
+message ListEntriesRequest {
+  string balance_id = 1;
+}
+message ListEntriesResponse {
+  repeated Entry entries = 1;
+}
+
+message GetEntryRequest {
+  string balance_id = 1;
+  string entry_ymd = 2;
+}
+message GetEntryResponse {
+  Entry entry = 1;
+}
+
+message CreateEntryRequest {
+  string balance_id = 1;
+  string entry_ymd = 2;
+  Payload entry_payload = 3;
+}
+message CreateEntryResponse {
+  Entry entry = 1;
+}
+
+message UpdateEntryRequest {
   string balance_id = 1;
   string entry_ymd = 2;
   Payload entry_payload = 3;
   string version_match = 4;
 }
-message UpsertEntryResponse {
+message UpdateEntryResponse {
   Entry entry = 1;
 }

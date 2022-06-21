@@ -27,10 +27,14 @@ const (
 
 // BalancesClient is a client for the biscuit.balances.v1.Balances service.
 type BalancesClient interface {
-	List(context.Context, *connect_go.Request[v1.ListRequest]) (*connect_go.Response[v1.ListResponse], error)
-	Get(context.Context, *connect_go.Request[v1.GetRequest]) (*connect_go.Response[v1.GetResponse], error)
-	Create(context.Context, *connect_go.Request[v1.CreateRequest]) (*connect_go.Response[v1.CreateResponse], error)
-	UpsertEntry(context.Context, *connect_go.Request[v1.UpsertEntryRequest]) (*connect_go.Response[v1.UpsertEntryResponse], error)
+	ListBalances(context.Context, *connect_go.Request[v1.ListBalancesRequest]) (*connect_go.Response[v1.ListBalancesResponse], error)
+	GetBalance(context.Context, *connect_go.Request[v1.GetBalanceRequest]) (*connect_go.Response[v1.GetBalanceResponse], error)
+	CreateBalance(context.Context, *connect_go.Request[v1.CreateBalanceRequest]) (*connect_go.Response[v1.CreateBalanceResponse], error)
+	UpdateBalance(context.Context, *connect_go.Request[v1.UpdateBalanceRequest]) (*connect_go.Response[v1.UpdateBalanceRequest], error)
+	ListEntries(context.Context, *connect_go.Request[v1.ListEntriesRequest]) (*connect_go.Response[v1.ListEntriesResponse], error)
+	GetEntry(context.Context, *connect_go.Request[v1.GetEntryRequest]) (*connect_go.Response[v1.GetEntryResponse], error)
+	CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error)
+	UpdateEntry(context.Context, *connect_go.Request[v1.UpdateEntryRequest]) (*connect_go.Response[v1.UpdateEntryResponse], error)
 }
 
 // NewBalancesClient constructs a client for the biscuit.balances.v1.Balances service. By default,
@@ -43,24 +47,44 @@ type BalancesClient interface {
 func NewBalancesClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) BalancesClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &balancesClient{
-		list: connect_go.NewClient[v1.ListRequest, v1.ListResponse](
+		listBalances: connect_go.NewClient[v1.ListBalancesRequest, v1.ListBalancesResponse](
 			httpClient,
-			baseURL+"/biscuit.balances.v1.Balances/List",
+			baseURL+"/biscuit.balances.v1.Balances/ListBalances",
 			opts...,
 		),
-		get: connect_go.NewClient[v1.GetRequest, v1.GetResponse](
+		getBalance: connect_go.NewClient[v1.GetBalanceRequest, v1.GetBalanceResponse](
 			httpClient,
-			baseURL+"/biscuit.balances.v1.Balances/Get",
+			baseURL+"/biscuit.balances.v1.Balances/GetBalance",
 			opts...,
 		),
-		create: connect_go.NewClient[v1.CreateRequest, v1.CreateResponse](
+		createBalance: connect_go.NewClient[v1.CreateBalanceRequest, v1.CreateBalanceResponse](
 			httpClient,
-			baseURL+"/biscuit.balances.v1.Balances/Create",
+			baseURL+"/biscuit.balances.v1.Balances/CreateBalance",
 			opts...,
 		),
-		upsertEntry: connect_go.NewClient[v1.UpsertEntryRequest, v1.UpsertEntryResponse](
+		updateBalance: connect_go.NewClient[v1.UpdateBalanceRequest, v1.UpdateBalanceRequest](
 			httpClient,
-			baseURL+"/biscuit.balances.v1.Balances/UpsertEntry",
+			baseURL+"/biscuit.balances.v1.Balances/UpdateBalance",
+			opts...,
+		),
+		listEntries: connect_go.NewClient[v1.ListEntriesRequest, v1.ListEntriesResponse](
+			httpClient,
+			baseURL+"/biscuit.balances.v1.Balances/ListEntries",
+			opts...,
+		),
+		getEntry: connect_go.NewClient[v1.GetEntryRequest, v1.GetEntryResponse](
+			httpClient,
+			baseURL+"/biscuit.balances.v1.Balances/GetEntry",
+			opts...,
+		),
+		createEntry: connect_go.NewClient[v1.CreateEntryRequest, v1.CreateEntryRequest](
+			httpClient,
+			baseURL+"/biscuit.balances.v1.Balances/CreateEntry",
+			opts...,
+		),
+		updateEntry: connect_go.NewClient[v1.UpdateEntryRequest, v1.UpdateEntryResponse](
+			httpClient,
+			baseURL+"/biscuit.balances.v1.Balances/UpdateEntry",
 			opts...,
 		),
 	}
@@ -68,38 +92,66 @@ func NewBalancesClient(httpClient connect_go.HTTPClient, baseURL string, opts ..
 
 // balancesClient implements BalancesClient.
 type balancesClient struct {
-	list        *connect_go.Client[v1.ListRequest, v1.ListResponse]
-	get         *connect_go.Client[v1.GetRequest, v1.GetResponse]
-	create      *connect_go.Client[v1.CreateRequest, v1.CreateResponse]
-	upsertEntry *connect_go.Client[v1.UpsertEntryRequest, v1.UpsertEntryResponse]
+	listBalances  *connect_go.Client[v1.ListBalancesRequest, v1.ListBalancesResponse]
+	getBalance    *connect_go.Client[v1.GetBalanceRequest, v1.GetBalanceResponse]
+	createBalance *connect_go.Client[v1.CreateBalanceRequest, v1.CreateBalanceResponse]
+	updateBalance *connect_go.Client[v1.UpdateBalanceRequest, v1.UpdateBalanceRequest]
+	listEntries   *connect_go.Client[v1.ListEntriesRequest, v1.ListEntriesResponse]
+	getEntry      *connect_go.Client[v1.GetEntryRequest, v1.GetEntryResponse]
+	createEntry   *connect_go.Client[v1.CreateEntryRequest, v1.CreateEntryRequest]
+	updateEntry   *connect_go.Client[v1.UpdateEntryRequest, v1.UpdateEntryResponse]
 }
 
-// List calls biscuit.balances.v1.Balances.List.
-func (c *balancesClient) List(ctx context.Context, req *connect_go.Request[v1.ListRequest]) (*connect_go.Response[v1.ListResponse], error) {
-	return c.list.CallUnary(ctx, req)
+// ListBalances calls biscuit.balances.v1.Balances.ListBalances.
+func (c *balancesClient) ListBalances(ctx context.Context, req *connect_go.Request[v1.ListBalancesRequest]) (*connect_go.Response[v1.ListBalancesResponse], error) {
+	return c.listBalances.CallUnary(ctx, req)
 }
 
-// Get calls biscuit.balances.v1.Balances.Get.
-func (c *balancesClient) Get(ctx context.Context, req *connect_go.Request[v1.GetRequest]) (*connect_go.Response[v1.GetResponse], error) {
-	return c.get.CallUnary(ctx, req)
+// GetBalance calls biscuit.balances.v1.Balances.GetBalance.
+func (c *balancesClient) GetBalance(ctx context.Context, req *connect_go.Request[v1.GetBalanceRequest]) (*connect_go.Response[v1.GetBalanceResponse], error) {
+	return c.getBalance.CallUnary(ctx, req)
 }
 
-// Create calls biscuit.balances.v1.Balances.Create.
-func (c *balancesClient) Create(ctx context.Context, req *connect_go.Request[v1.CreateRequest]) (*connect_go.Response[v1.CreateResponse], error) {
-	return c.create.CallUnary(ctx, req)
+// CreateBalance calls biscuit.balances.v1.Balances.CreateBalance.
+func (c *balancesClient) CreateBalance(ctx context.Context, req *connect_go.Request[v1.CreateBalanceRequest]) (*connect_go.Response[v1.CreateBalanceResponse], error) {
+	return c.createBalance.CallUnary(ctx, req)
 }
 
-// UpsertEntry calls biscuit.balances.v1.Balances.UpsertEntry.
-func (c *balancesClient) UpsertEntry(ctx context.Context, req *connect_go.Request[v1.UpsertEntryRequest]) (*connect_go.Response[v1.UpsertEntryResponse], error) {
-	return c.upsertEntry.CallUnary(ctx, req)
+// UpdateBalance calls biscuit.balances.v1.Balances.UpdateBalance.
+func (c *balancesClient) UpdateBalance(ctx context.Context, req *connect_go.Request[v1.UpdateBalanceRequest]) (*connect_go.Response[v1.UpdateBalanceRequest], error) {
+	return c.updateBalance.CallUnary(ctx, req)
+}
+
+// ListEntries calls biscuit.balances.v1.Balances.ListEntries.
+func (c *balancesClient) ListEntries(ctx context.Context, req *connect_go.Request[v1.ListEntriesRequest]) (*connect_go.Response[v1.ListEntriesResponse], error) {
+	return c.listEntries.CallUnary(ctx, req)
+}
+
+// GetEntry calls biscuit.balances.v1.Balances.GetEntry.
+func (c *balancesClient) GetEntry(ctx context.Context, req *connect_go.Request[v1.GetEntryRequest]) (*connect_go.Response[v1.GetEntryResponse], error) {
+	return c.getEntry.CallUnary(ctx, req)
+}
+
+// CreateEntry calls biscuit.balances.v1.Balances.CreateEntry.
+func (c *balancesClient) CreateEntry(ctx context.Context, req *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error) {
+	return c.createEntry.CallUnary(ctx, req)
+}
+
+// UpdateEntry calls biscuit.balances.v1.Balances.UpdateEntry.
+func (c *balancesClient) UpdateEntry(ctx context.Context, req *connect_go.Request[v1.UpdateEntryRequest]) (*connect_go.Response[v1.UpdateEntryResponse], error) {
+	return c.updateEntry.CallUnary(ctx, req)
 }
 
 // BalancesHandler is an implementation of the biscuit.balances.v1.Balances service.
 type BalancesHandler interface {
-	List(context.Context, *connect_go.Request[v1.ListRequest]) (*connect_go.Response[v1.ListResponse], error)
-	Get(context.Context, *connect_go.Request[v1.GetRequest]) (*connect_go.Response[v1.GetResponse], error)
-	Create(context.Context, *connect_go.Request[v1.CreateRequest]) (*connect_go.Response[v1.CreateResponse], error)
-	UpsertEntry(context.Context, *connect_go.Request[v1.UpsertEntryRequest]) (*connect_go.Response[v1.UpsertEntryResponse], error)
+	ListBalances(context.Context, *connect_go.Request[v1.ListBalancesRequest]) (*connect_go.Response[v1.ListBalancesResponse], error)
+	GetBalance(context.Context, *connect_go.Request[v1.GetBalanceRequest]) (*connect_go.Response[v1.GetBalanceResponse], error)
+	CreateBalance(context.Context, *connect_go.Request[v1.CreateBalanceRequest]) (*connect_go.Response[v1.CreateBalanceResponse], error)
+	UpdateBalance(context.Context, *connect_go.Request[v1.UpdateBalanceRequest]) (*connect_go.Response[v1.UpdateBalanceRequest], error)
+	ListEntries(context.Context, *connect_go.Request[v1.ListEntriesRequest]) (*connect_go.Response[v1.ListEntriesResponse], error)
+	GetEntry(context.Context, *connect_go.Request[v1.GetEntryRequest]) (*connect_go.Response[v1.GetEntryResponse], error)
+	CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error)
+	UpdateEntry(context.Context, *connect_go.Request[v1.UpdateEntryRequest]) (*connect_go.Response[v1.UpdateEntryResponse], error)
 }
 
 // NewBalancesHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -109,24 +161,44 @@ type BalancesHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewBalancesHandler(svc BalancesHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
 	mux := http.NewServeMux()
-	mux.Handle("/biscuit.balances.v1.Balances/List", connect_go.NewUnaryHandler(
-		"/biscuit.balances.v1.Balances/List",
-		svc.List,
+	mux.Handle("/biscuit.balances.v1.Balances/ListBalances", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/ListBalances",
+		svc.ListBalances,
 		opts...,
 	))
-	mux.Handle("/biscuit.balances.v1.Balances/Get", connect_go.NewUnaryHandler(
-		"/biscuit.balances.v1.Balances/Get",
-		svc.Get,
+	mux.Handle("/biscuit.balances.v1.Balances/GetBalance", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/GetBalance",
+		svc.GetBalance,
 		opts...,
 	))
-	mux.Handle("/biscuit.balances.v1.Balances/Create", connect_go.NewUnaryHandler(
-		"/biscuit.balances.v1.Balances/Create",
-		svc.Create,
+	mux.Handle("/biscuit.balances.v1.Balances/CreateBalance", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/CreateBalance",
+		svc.CreateBalance,
 		opts...,
 	))
-	mux.Handle("/biscuit.balances.v1.Balances/UpsertEntry", connect_go.NewUnaryHandler(
-		"/biscuit.balances.v1.Balances/UpsertEntry",
-		svc.UpsertEntry,
+	mux.Handle("/biscuit.balances.v1.Balances/UpdateBalance", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/UpdateBalance",
+		svc.UpdateBalance,
+		opts...,
+	))
+	mux.Handle("/biscuit.balances.v1.Balances/ListEntries", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/ListEntries",
+		svc.ListEntries,
+		opts...,
+	))
+	mux.Handle("/biscuit.balances.v1.Balances/GetEntry", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/GetEntry",
+		svc.GetEntry,
+		opts...,
+	))
+	mux.Handle("/biscuit.balances.v1.Balances/CreateEntry", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/CreateEntry",
+		svc.CreateEntry,
+		opts...,
+	))
+	mux.Handle("/biscuit.balances.v1.Balances/UpdateEntry", connect_go.NewUnaryHandler(
+		"/biscuit.balances.v1.Balances/UpdateEntry",
+		svc.UpdateEntry,
 		opts...,
 	))
 	return "/biscuit.balances.v1.Balances/", mux
@@ -135,18 +207,34 @@ func NewBalancesHandler(svc BalancesHandler, opts ...connect_go.HandlerOption) (
 // UnimplementedBalancesHandler returns CodeUnimplemented from all methods.
 type UnimplementedBalancesHandler struct{}
 
-func (UnimplementedBalancesHandler) List(context.Context, *connect_go.Request[v1.ListRequest]) (*connect_go.Response[v1.ListResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.List is not implemented"))
+func (UnimplementedBalancesHandler) ListBalances(context.Context, *connect_go.Request[v1.ListBalancesRequest]) (*connect_go.Response[v1.ListBalancesResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.ListBalances is not implemented"))
 }
 
-func (UnimplementedBalancesHandler) Get(context.Context, *connect_go.Request[v1.GetRequest]) (*connect_go.Response[v1.GetResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.Get is not implemented"))
+func (UnimplementedBalancesHandler) GetBalance(context.Context, *connect_go.Request[v1.GetBalanceRequest]) (*connect_go.Response[v1.GetBalanceResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.GetBalance is not implemented"))
 }
 
-func (UnimplementedBalancesHandler) Create(context.Context, *connect_go.Request[v1.CreateRequest]) (*connect_go.Response[v1.CreateResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.Create is not implemented"))
+func (UnimplementedBalancesHandler) CreateBalance(context.Context, *connect_go.Request[v1.CreateBalanceRequest]) (*connect_go.Response[v1.CreateBalanceResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.CreateBalance is not implemented"))
 }
 
-func (UnimplementedBalancesHandler) UpsertEntry(context.Context, *connect_go.Request[v1.UpsertEntryRequest]) (*connect_go.Response[v1.UpsertEntryResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.UpsertEntry is not implemented"))
+func (UnimplementedBalancesHandler) UpdateBalance(context.Context, *connect_go.Request[v1.UpdateBalanceRequest]) (*connect_go.Response[v1.UpdateBalanceRequest], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.UpdateBalance is not implemented"))
+}
+
+func (UnimplementedBalancesHandler) ListEntries(context.Context, *connect_go.Request[v1.ListEntriesRequest]) (*connect_go.Response[v1.ListEntriesResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.ListEntries is not implemented"))
+}
+
+func (UnimplementedBalancesHandler) GetEntry(context.Context, *connect_go.Request[v1.GetEntryRequest]) (*connect_go.Response[v1.GetEntryResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.GetEntry is not implemented"))
+}
+
+func (UnimplementedBalancesHandler) CreateEntry(context.Context, *connect_go.Request[v1.CreateEntryRequest]) (*connect_go.Response[v1.CreateEntryRequest], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.CreateEntry is not implemented"))
+}
+
+func (UnimplementedBalancesHandler) UpdateEntry(context.Context, *connect_go.Request[v1.UpdateEntryRequest]) (*connect_go.Response[v1.UpdateEntryResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.balances.v1.Balances.UpdateEntry is not implemented"))
 }
