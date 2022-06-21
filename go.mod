@@ -1,6 +1,6 @@
 module github.com/finebiscuit/proto
 
-go 1.17
+go 1.18
 
 require (
 	github.com/bufbuild/connect-go v0.1.1
