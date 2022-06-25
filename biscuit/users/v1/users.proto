@@ -18,9 +18,10 @@ message Workspace {
 }
 
 message Session {
-    string code = 1;
-    Identity identity = 2;
-    repeated Workspace workspaces = 3;
+    string id = 1;
+    string code = 2;
+    Identity identity = 3;
+    repeated Workspace workspaces = 4;
 }
 
 message SignUpRequest {
@@ -40,8 +41,9 @@ message CreateSessionResponse {
 }
 
 message GetAccessTokenRequest {
-    string session_code = 1;
-    string workspace_id = 2;
+    string session_id = 1;
+    string session_code = 2;
+    string workspace_id = 3;
 }
 message GetAccessTokenResponse {
     string access_token = 1;
