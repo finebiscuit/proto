@@ -1,9 +1,11 @@
 syntax = "proto3";
-package biscuit.users.v1;
+package biscuit.auth.v1;
 
-option go_package = "github.com/finebiscuit/proto/biscuit/users/v1;usersv1";
+option go_package = "github.com/finebiscuit/proto/biscuit/auth/v1;authv1";
 
-service Users {
+import "google/protobuf/timestamp.proto";
+
+service Auth {
     rpc SignUp(SignUpRequest) returns (SignUpResponse) {}
     rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
     rpc GetAccessToken(GetAccessTokenRequest) returns (GetAccessTokenResponse) {}
@@ -11,17 +13,19 @@ service Users {
 
 message Identity {
     string user_id = 1;
+    string user_email = 2;
 }
 
 message Workspace {
     string id = 1;
+    string display_name = 2;
 }
 
 message Session {
     string id = 1;
     string code = 2;
-    Identity identity = 3;
-    repeated Workspace workspaces = 4;
+    google.protobuf.Timestamp created_at = 3;
+    google.protobuf.Timestamp expires_at = 4;
 }
 
 message SignUpRequest {
@@ -38,6 +42,8 @@ message CreateSessionRequest {
 }
 message CreateSessionResponse {
     Session session = 1;
+    Identity identity = 2;
+    repeated Workspace workspaces = 3;
 }
 
 message GetAccessTokenRequest {
