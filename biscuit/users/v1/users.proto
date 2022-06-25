@@ -1,0 +1,50 @@
+syntax = "proto3";
+package biscuit.users.v1;
+
+option go_package = "github.com/finebiscuit/proto/biscuit/users/v1;usersv1";
+
+service Users {
+    rpc SignUp(SignUpRequest) returns (SignUpResponse) {}
+    rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
+    rpc GetAccessToken(GetAccessTokenRequest) returns (GetAccessTokenResponse) {}
+}
+
+message Identity {
+    string user_id = 1;
+}
+
+message Workspace {
+    string id = 1;
+}
+
+message Session {
+    string code = 1;
+    Identity identity = 2;
+    repeated Workspace workspaces = 3;
+}
+
+message SignUpRequest {
+    string email = 1;
+    string password = 2;
+}
+message SignUpResponse {
+    Identity identity = 1;
+}
+
+message CreateSessionRequest {
+    string login = 1;
+    string password = 2;
+}
+message CreateSessionResponse {
+    Session session = 1;
+}
+
+message GetAccessTokenRequest {
+    string session_code = 1;
+    string workspace_id = 2;
+}
+message GetAccessTokenResponse {
+    string access_token = 1;
+    uint32 expires_in = 2;
+    string token_type = 3;
+}
