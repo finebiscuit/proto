@@ -9,6 +9,7 @@ service Auth {
     rpc SignUp(SignUpRequest) returns (SignUpResponse) {}
     rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
     rpc GetAccessToken(GetAccessTokenRequest) returns (GetAccessTokenResponse) {}
+    rpc VerifyAccessToken(VerifyAccessTokenRequest) returns (VerifyAccessTokenResponse) {}
 }
 
 message Identity {
@@ -55,4 +56,15 @@ message GetAccessTokenResponse {
     string access_token = 1;
     uint32 expires_in = 2;
     string token_type = 3;
+}
+
+message VerifyAccessTokenRequest {
+    string access_token = 1;
+}
+message VerifyAccessTokenResponse {
+    string user_id = 1;
+    string workspace_id = 2;
+    string session_id = 3;
+    uint32 expires_in = 4;
+    google.protobuf.Timestamp issued_at = 5;
 }

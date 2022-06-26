@@ -30,6 +30,7 @@ type AuthClient interface {
 	SignUp(context.Context, *connect_go.Request[v1.SignUpRequest]) (*connect_go.Response[v1.SignUpResponse], error)
 	CreateSession(context.Context, *connect_go.Request[v1.CreateSessionRequest]) (*connect_go.Response[v1.CreateSessionResponse], error)
 	GetAccessToken(context.Context, *connect_go.Request[v1.GetAccessTokenRequest]) (*connect_go.Response[v1.GetAccessTokenResponse], error)
+	VerifyAccessToken(context.Context, *connect_go.Request[v1.VerifyAccessTokenRequest]) (*connect_go.Response[v1.VerifyAccessTokenResponse], error)
 }
 
 // NewAuthClient constructs a client for the biscuit.auth.v1.Auth service. By default, it uses the
@@ -57,14 +58,20 @@ func NewAuthClient(httpClient connect_go.HTTPClient, baseURL string, opts ...con
 			baseURL+"/biscuit.auth.v1.Auth/GetAccessToken",
 			opts...,
 		),
+		verifyAccessToken: connect_go.NewClient[v1.VerifyAccessTokenRequest, v1.VerifyAccessTokenResponse](
+			httpClient,
+			baseURL+"/biscuit.auth.v1.Auth/VerifyAccessToken",
+			opts...,
+		),
 	}
 }
 
 // authClient implements AuthClient.
 type authClient struct {
-	signUp         *connect_go.Client[v1.SignUpRequest, v1.SignUpResponse]
-	createSession  *connect_go.Client[v1.CreateSessionRequest, v1.CreateSessionResponse]
-	getAccessToken *connect_go.Client[v1.GetAccessTokenRequest, v1.GetAccessTokenResponse]
+	signUp            *connect_go.Client[v1.SignUpRequest, v1.SignUpResponse]
+	createSession     *connect_go.Client[v1.CreateSessionRequest, v1.CreateSessionResponse]
+	getAccessToken    *connect_go.Client[v1.GetAccessTokenRequest, v1.GetAccessTokenResponse]
+	verifyAccessToken *connect_go.Client[v1.VerifyAccessTokenRequest, v1.VerifyAccessTokenResponse]
 }
 
 // SignUp calls biscuit.auth.v1.Auth.SignUp.
@@ -82,11 +89,17 @@ func (c *authClient) GetAccessToken(ctx context.Context, req *connect_go.Request
 	return c.getAccessToken.CallUnary(ctx, req)
 }
 
+// VerifyAccessToken calls biscuit.auth.v1.Auth.VerifyAccessToken.
+func (c *authClient) VerifyAccessToken(ctx context.Context, req *connect_go.Request[v1.VerifyAccessTokenRequest]) (*connect_go.Response[v1.VerifyAccessTokenResponse], error) {
+	return c.verifyAccessToken.CallUnary(ctx, req)
+}
+
 // AuthHandler is an implementation of the biscuit.auth.v1.Auth service.
 type AuthHandler interface {
 	SignUp(context.Context, *connect_go.Request[v1.SignUpRequest]) (*connect_go.Response[v1.SignUpResponse], error)
 	CreateSession(context.Context, *connect_go.Request[v1.CreateSessionRequest]) (*connect_go.Response[v1.CreateSessionResponse], error)
 	GetAccessToken(context.Context, *connect_go.Request[v1.GetAccessTokenRequest]) (*connect_go.Response[v1.GetAccessTokenResponse], error)
+	VerifyAccessToken(context.Context, *connect_go.Request[v1.VerifyAccessTokenRequest]) (*connect_go.Response[v1.VerifyAccessTokenResponse], error)
 }
 
 // NewAuthHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -111,6 +124,11 @@ func NewAuthHandler(svc AuthHandler, opts ...connect_go.HandlerOption) (string, 
 		svc.GetAccessToken,
 		opts...,
 	))
+	mux.Handle("/biscuit.auth.v1.Auth/VerifyAccessToken", connect_go.NewUnaryHandler(
+		"/biscuit.auth.v1.Auth/VerifyAccessToken",
+		svc.VerifyAccessToken,
+		opts...,
+	))
 	return "/biscuit.auth.v1.Auth/", mux
 }
 
@@ -127,4 +145,8 @@ func (UnimplementedAuthHandler) CreateSession(context.Context, *connect_go.Reque
 
 func (UnimplementedAuthHandler) GetAccessToken(context.Context, *connect_go.Request[v1.GetAccessTokenRequest]) (*connect_go.Response[v1.GetAccessTokenResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.auth.v1.Auth.GetAccessToken is not implemented"))
+}
+
+func (UnimplementedAuthHandler) VerifyAccessToken(context.Context, *connect_go.Request[v1.VerifyAccessTokenRequest]) (*connect_go.Response[v1.VerifyAccessTokenResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.auth.v1.Auth.VerifyAccessToken is not implemented"))
 }
