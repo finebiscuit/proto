@@ -12,6 +12,10 @@ service Auth {
     rpc VerifyAccessToken(VerifyAccessTokenRequest) returns (VerifyAccessTokenResponse) {}
 }
 
+message ServerInfo {
+    bool forex_supported = 1;
+}
+
 message Identity {
     string user_id = 1;
     string user_email = 2;
@@ -45,6 +49,7 @@ message CreateSessionResponse {
     Session session = 1;
     Identity identity = 2;
     repeated Workspace workspaces = 3;
+    ServerInfo server_info = 4;
 }
 
 message GetAccessTokenRequest {
