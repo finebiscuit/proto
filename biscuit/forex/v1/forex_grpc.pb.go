@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ForexClient interface {
 	GetRate(ctx context.Context, in *GetRateRequest, opts ...grpc.CallOption) (*GetRateResponse, error)
+	ListRates(ctx context.Context, in *ListRatesRequest, opts ...grpc.CallOption) (*ListRatesResponse, error)
 }
 
 type forexClient struct {
@@ -42,11 +43,21 @@ func (c *forexClient) GetRate(ctx context.Context, in *GetRateRequest, opts ...g
 	return out, nil
 }
 
+func (c *forexClient) ListRates(ctx context.Context, in *ListRatesRequest, opts ...grpc.CallOption) (*ListRatesResponse, error) {
+	out := new(ListRatesResponse)
+	err := c.cc.Invoke(ctx, "/biscuit.forex.v1.Forex/ListRates", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ForexServer is the server API for Forex service.
 // All implementations must embed UnimplementedForexServer
 // for forward compatibility
 type ForexServer interface {
 	GetRate(context.Context, *GetRateRequest) (*GetRateResponse, error)
+	ListRates(context.Context, *ListRatesRequest) (*ListRatesResponse, error)
 	mustEmbedUnimplementedForexServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedForexServer struct {
 
 func (UnimplementedForexServer) GetRate(context.Context, *GetRateRequest) (*GetRateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRate not implemented")
+}
+func (UnimplementedForexServer) ListRates(context.Context, *ListRatesRequest) (*ListRatesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRates not implemented")
 }
 func (UnimplementedForexServer) mustEmbedUnimplementedForexServer() {}
 
@@ -88,6 +102,24 @@ func _Forex_GetRate_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Forex_ListRates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRatesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForexServer).ListRates(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/biscuit.forex.v1.Forex/ListRates",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForexServer).ListRates(ctx, req.(*ListRatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Forex_ServiceDesc is the grpc.ServiceDesc for Forex service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var Forex_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRate",
 			Handler:    _Forex_GetRate_Handler,
+		},
+		{
+			MethodName: "ListRates",
+			Handler:    _Forex_ListRates_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

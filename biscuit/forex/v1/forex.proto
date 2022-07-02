@@ -7,6 +7,7 @@ import "google/protobuf/timestamp.proto";
 
 service Forex {
   rpc GetRate(GetRateRequest) returns (GetRateResponse) {}
+  rpc ListRates(ListRatesRequest) returns (ListRatesResponse) {}
 }
 
 message GetRateRequest {
@@ -18,4 +19,15 @@ message GetRateRequest {
 
 message GetRateResponse {
   string value = 1;
+}
+
+message ListRatesRequest {
+  string from = 1;
+  repeated string targets = 2;
+  bool historical = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+message ListRatesResponse {
+  map<string, string> values = 1;
 }

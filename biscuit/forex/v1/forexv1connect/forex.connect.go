@@ -28,6 +28,7 @@ const (
 // ForexClient is a client for the biscuit.forex.v1.Forex service.
 type ForexClient interface {
 	GetRate(context.Context, *connect_go.Request[v1.GetRateRequest]) (*connect_go.Response[v1.GetRateResponse], error)
+	ListRates(context.Context, *connect_go.Request[v1.ListRatesRequest]) (*connect_go.Response[v1.ListRatesResponse], error)
 }
 
 // NewForexClient constructs a client for the biscuit.forex.v1.Forex service. By default, it uses
@@ -45,12 +46,18 @@ func NewForexClient(httpClient connect_go.HTTPClient, baseURL string, opts ...co
 			baseURL+"/biscuit.forex.v1.Forex/GetRate",
 			opts...,
 		),
+		listRates: connect_go.NewClient[v1.ListRatesRequest, v1.ListRatesResponse](
+			httpClient,
+			baseURL+"/biscuit.forex.v1.Forex/ListRates",
+			opts...,
+		),
 	}
 }
 
 // forexClient implements ForexClient.
 type forexClient struct {
-	getRate *connect_go.Client[v1.GetRateRequest, v1.GetRateResponse]
+	getRate   *connect_go.Client[v1.GetRateRequest, v1.GetRateResponse]
+	listRates *connect_go.Client[v1.ListRatesRequest, v1.ListRatesResponse]
 }
 
 // GetRate calls biscuit.forex.v1.Forex.GetRate.
@@ -58,9 +65,15 @@ func (c *forexClient) GetRate(ctx context.Context, req *connect_go.Request[v1.Ge
 	return c.getRate.CallUnary(ctx, req)
 }
 
+// ListRates calls biscuit.forex.v1.Forex.ListRates.
+func (c *forexClient) ListRates(ctx context.Context, req *connect_go.Request[v1.ListRatesRequest]) (*connect_go.Response[v1.ListRatesResponse], error) {
+	return c.listRates.CallUnary(ctx, req)
+}
+
 // ForexHandler is an implementation of the biscuit.forex.v1.Forex service.
 type ForexHandler interface {
 	GetRate(context.Context, *connect_go.Request[v1.GetRateRequest]) (*connect_go.Response[v1.GetRateResponse], error)
+	ListRates(context.Context, *connect_go.Request[v1.ListRatesRequest]) (*connect_go.Response[v1.ListRatesResponse], error)
 }
 
 // NewForexHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -75,6 +88,11 @@ func NewForexHandler(svc ForexHandler, opts ...connect_go.HandlerOption) (string
 		svc.GetRate,
 		opts...,
 	))
+	mux.Handle("/biscuit.forex.v1.Forex/ListRates", connect_go.NewUnaryHandler(
+		"/biscuit.forex.v1.Forex/ListRates",
+		svc.ListRates,
+		opts...,
+	))
 	return "/biscuit.forex.v1.Forex/", mux
 }
 
@@ -83,4 +101,8 @@ type UnimplementedForexHandler struct{}
 
 func (UnimplementedForexHandler) GetRate(context.Context, *connect_go.Request[v1.GetRateRequest]) (*connect_go.Response[v1.GetRateResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.forex.v1.Forex.GetRate is not implemented"))
+}
+
+func (UnimplementedForexHandler) ListRates(context.Context, *connect_go.Request[v1.ListRatesRequest]) (*connect_go.Response[v1.ListRatesResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("biscuit.forex.v1.Forex.ListRates is not implemented"))
 }
