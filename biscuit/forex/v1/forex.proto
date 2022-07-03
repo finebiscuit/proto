@@ -11,8 +11,8 @@ service Forex {
 }
 
 message GetRateRequest {
-  string from = 1;
-  string to = 2;
+  string base = 1;
+  string target = 2;
   bool historical = 3;
   google.protobuf.Timestamp timestamp = 4;
 }
@@ -22,12 +22,13 @@ message GetRateResponse {
 }
 
 message ListRatesRequest {
-  string from = 1;
+  string base = 1;
   repeated string targets = 2;
   bool historical = 3;
   google.protobuf.Timestamp timestamp = 4;
 }
 
 message ListRatesResponse {
-  map<string, string> values = 1;
+  string base = 1;
+  map<string, string> values = 2;
 }
